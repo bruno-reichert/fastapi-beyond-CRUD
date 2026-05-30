@@ -1,0 +1,5 @@
+### WHEN YOU LOG INTO POSTGRES
+# USE psql -U postgres
+# BECAUSE OTHERWISE IT ASKS FOR THE WINDOWS USER FOR REASONS
+
+# COMMAND TO RUN TS: uv run fastapi dev src/__init__.py
