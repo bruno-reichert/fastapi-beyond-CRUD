@@ -21,13 +21,13 @@ async def create_a_book(
     book_data: BookCreateModel, session: AsyncSession = Depends(get_session)
 ) -> dict:
     new_book = await book_service.create_book(book_data, session)
-    return new_book
+    return new_book # type: ignore
 
 @book_router.get("/{book_uid}", response_model=Book)
 async def get_book(book_uid: str, session: AsyncSession = Depends(get_session)) -> dict:
     book = await book_service.get_book(book_uid, session)
     if book:
-        return book
+        return book # type: ignore
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Book not found"
@@ -48,7 +48,7 @@ async def update_book(
         )
 
     else:
-        return updated_book
+        return updated_book # type: ignore
 
 
 @book_router.delete("/{book_uid}", status_code=status.HTTP_204_NO_CONTENT)
