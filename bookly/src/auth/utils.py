@@ -1,6 +1,6 @@
 import logging
 import bcrypt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from src.config import Config
 import jwt
 import uuid
@@ -18,7 +18,7 @@ def create_access_token(user_data: dict, expires: timedelta = timedelta(minutes=
     payload = {}
 
     payload['user'] = user_data
-    payload['exp'] = datetime.now() + expires
+    payload['exp'] = int((datetime.now(timezone.utc) + expires).timestamp())
     payload['jti'] = str(uuid.uuid4())
     payload['refresh'] = refresh
 
