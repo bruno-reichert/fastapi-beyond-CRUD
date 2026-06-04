@@ -4,7 +4,7 @@ from fastapi.security.http import HTTPAuthorizationCredentials
 from fastapi.exceptions import HTTPException
 from .utils import decode_token
 
-class AccessTokenBearer(HTTPBearer):
+class TokenBearer(HTTPBearer):
     def __init__(self, auto_error = False):
         super().__init__(auto_error=auto_error)
 
@@ -15,14 +15,25 @@ class AccessTokenBearer(HTTPBearer):
             token_data = decode_token(tokens)
             if not self.token_valid(tokens):
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token or expired token.")
-            if token_data is not None:
-                if token_data['refresh']:
-                    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token or expired token.")
-            else:
+            if token_data is None:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token or expired token.")
+            self.verify_token_data(token_data)
             return token_data
         return None
     
     def token_valid(self, token: str) -> bool:
         token_data = decode_token(token)
         return True if token_data is not None else False
+    
+    def verify_token_data(self, token_data: dict) -> None:
+        raise NotImplementedError("Subclasses must implement this method!!!")
+    
+class AccessTokenBearer(TokenBearer):
+    def verify_token_data(self, token_data: dict) -> None:
+        if token_data and token_data['refresh']:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Please use access token instead of refresh token.")
+
+class RefreshTokenBearer(TokenBearer):
+    def verify_token_data(self, token_data: dict) -> None:
+        if token_data and not token_data['refresh']:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Please use refresh token instead of access token.")
