@@ -20,3 +20,20 @@ async def add_jti_to_blocklist(jti: str) -> None:
 
 async def token_in_blocklist(jti: str) -> bool:
     return await token_blocklist.exists(jti) == 1
+
+# admin
+admin_permissions = [
+    "adding users",
+    "change roles",
+    "crud on users",
+    "book submissions",
+    "crud on reviews",
+    "revoking access"
+]
+
+# user
+user_permissions = [
+    "crud on their own book submissions",
+    "crud on their own reviews",
+    "crud on their own accounts"
+]
