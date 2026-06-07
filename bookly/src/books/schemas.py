@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, date
-
+from typing import List
 from pydantic import BaseModel
 
 class Book(BaseModel):

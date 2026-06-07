@@ -52,6 +52,8 @@ async def get_current_user(
     token_details: dict = Depends(AccessTokenBearer()), 
     session: AsyncSession = Depends(get_session)
     ):
+    if token_details is None:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or missing token.")
     user_email = token_details['user']['email']
     user = await user_service.get_user_by_email(session=session, email=user_email)
     if user:

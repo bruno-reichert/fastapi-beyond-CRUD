@@ -57,7 +57,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
     raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "Refresh token has expired, please login again")
 
 @auth_router.get('/me')
-async def get_current_user(user: dict = Depends(get_current_user), _: bool = Depends(role_checker)):
+async def get_current_user(user: dict = Depends(get_current_user), _: bool = Depends(role_checker), response_model=UserResponseModel):
     if user:
        return user
     raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "User not found")
