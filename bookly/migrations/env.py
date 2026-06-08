@@ -5,8 +5,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.auth.models import User
-from src.books.models import Book
+from src.db.models import User, Book
 from src.config import Config
 from sqlmodel import SQLModel
 

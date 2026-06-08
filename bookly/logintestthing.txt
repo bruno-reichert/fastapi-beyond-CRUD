@@ -1,0 +1,11 @@
+{
+    "email": "test@mail.com",
+    "password": "test123"
+}
+
+-- Other option
+
+{
+    "email": "new@mail.com",
+    "password": "newaccount"
+}

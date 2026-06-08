@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from src.config import Config
-from src.books.models import Book
+from src.db.models import Book
 
 async_engine = create_async_engine(
     url = Config.DATABASE_URL,

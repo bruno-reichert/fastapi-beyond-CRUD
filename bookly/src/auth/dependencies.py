@@ -5,7 +5,7 @@ from fastapi.exceptions import HTTPException
 from .utils import decode_token
 from src.db.redis import token_in_blocklist
 from src.db.main import get_session
-from .models import User
+from src.db.models import User
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .service import UserService
 from typing import List
