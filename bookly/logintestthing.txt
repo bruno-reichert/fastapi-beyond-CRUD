@@ -9,3 +9,10 @@
     "email": "new@mail.com",
     "password": "newaccount"
 }
+
+-- Admin user
+
+{
+  "email": "admin@mail.com",
+  "password": "admin123"
+}
