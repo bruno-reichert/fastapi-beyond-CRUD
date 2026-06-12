@@ -1,9 +1,11 @@
-import logging
-import bcrypt
+
 from datetime import datetime, timedelta, timezone
 from src.config import Config
+from itsdangerous import URLSafeTimedSerializer
 import jwt
 import uuid
+import logging
+import bcrypt
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
@@ -39,4 +41,21 @@ def decode_token(token: str) -> dict | None:
         return payload
     except jwt.PyJWTError as e:
         logging.exception(f"Error decoding token: {e}")
+        return None
+    
+serializer = URLSafeTimedSerializer(
+        secret_key=Config.JWT_SECRET_KEY,
+        salt="email-configuration"
+    )
+
+def create_url_safe_token(data: dict):
+    token = serializer.dumps(data)
+    return token
+
+def decode_url_safe_token(token:str):
+    try:
+        token_data = serializer.loads(token)
+        return token_data
+    except Exception as e:
+        logging.error(str(e))
         return None
