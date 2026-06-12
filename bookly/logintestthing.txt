@@ -14,5 +14,5 @@
 
 {
   "email": "admin@mail.com",
-  "password": "admin123"
+  "password": "admincool"
 }
