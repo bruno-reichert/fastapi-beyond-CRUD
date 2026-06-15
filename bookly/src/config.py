@@ -5,8 +5,7 @@ class Settings(BaseSettings):
     DATABASE_URL : str = ""
     JWT_SECRET_KEY : str = ""
     JWT_ALGORITHM : str = ""
-    REDIS_HOST : str = "localhost"
-    REDIS_PORT : int = 6379
+    REDIS_URL: str = "redis://localhost:6379/0"
     MAIL_USERNAME: str
     MAIL_PASSWORD: SecretStr
     MAIL_FROM: str
@@ -20,4 +19,6 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 Config = Settings() # type: ignore
-print(Config.DATABASE_URL)
+
+broker_url = Config.REDIS_URL
+result_backend = Config.REDIS_URL

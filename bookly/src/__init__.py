@@ -21,7 +21,12 @@ version = "v1"
 app = FastAPI(
     version=version, 
     title="Bookly API", 
-    description="A simple API for managing books")
+    description="A simple API for managing books",
+    docs_url="/api/{version}/docs",
+    redoc_url="/api/{version}/redoc",
+    contact={
+        "email": "testmail@gmail.com"
+    })
 
 register_all_errors(app)
 register_middleware(app)
