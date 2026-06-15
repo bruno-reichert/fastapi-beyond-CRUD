@@ -133,7 +133,14 @@ async def password_reset_request(email_data: PasswordResetRequestModel):
         body=html_message
     )
 
-    await mail.send_message(message)
+    try:
+        await mail.send_message(message)
+    except Exception as e:
+        print(f"Error sending password reset email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send password reset email"
+        )
 
     return JSONResponse(
         content={
@@ -147,7 +154,7 @@ async def reset_account_password(token: str, passwords: PasswordResetConfirmMode
     new_password = passwords.new_password
     confirm_new_password = passwords.confirm_new_password
     if new_password != confirm_new_password:
-        raise HTTPException(detail="Passwords do not match", status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(detail="Passwords do not match", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     token_data = decode_url_safe_token(token)
     if token_data is not None:
         user_email = token_data.get('email')

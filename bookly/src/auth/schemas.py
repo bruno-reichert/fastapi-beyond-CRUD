@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 import uuid
 from datetime import datetime
 from src.books.schemas import Book
@@ -7,7 +7,7 @@ from typing import List
 
 class UserCreateModel(BaseModel):
     username: str = Field(max_length = 20)
-    email: str = Field(max_length = 40)
+    email: EmailStr = Field(max_length = 40)
     password: str = Field(min_length = 6)
     first_name: str = Field(max_length = 100)
     last_name: str = Field(max_length = 100)
@@ -30,15 +30,15 @@ class UserBooksModel(UserResponseModel):
     reviews: List[ReviewModel] = []
 
 class UserLoginModel(BaseModel):
-    email: str = Field(max_length = 40)
+    email: EmailStr = Field(max_length = 40)
     password: str = Field(min_length = 6)
 
 class EmailModel(BaseModel):
     addresses: List[str]
 
 class PasswordResetRequestModel(BaseModel):
-    email: str
+    email: EmailStr
 
 class PasswordResetConfirmModel(BaseModel):
-    new_password: str
-    confirm_new_password: str
+    new_password: str = Field(min_length = 6)
+    confirm_new_password: str = Field(min_length = 6)
