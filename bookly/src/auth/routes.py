@@ -19,18 +19,34 @@ auth_router = APIRouter()
 user_service = UserService()
 role_checker = RoleChecker(allowed_roles=["admin", "user"])
 
-@auth_router.post('/send_mail')
-async def send_mail(emails:EmailModel):
-    emails = emails.addresses # type: ignore
+async def send_bg_email(recipients: list[str], subject: str, body: str):
+    """Função auxiliar que cria e envia o e-mail de forma assíncrona"""
+    message = create_message(recipients=recipients, subject=subject, body=body)
+    await mail.send_message(message)
 
+@auth_router.post('/send_mail')
+async def send_mail(emails:EmailModel, bg_tasks: BackgroundTasks):
     html = "<h1>Welcome to the app!</h1>"
     subject = "Welcome to the app!"
     try: 
-        send_email.delay(emails, subject, html) # type: ignore
-        return {"message": "Email sent successfully!"}
+        # message = create_message(
+        # emails, # type: ignore
+        # "Welcome",
+        # html
+        # )
+        # await mail.send_message(message)
+        bg_tasks.add_task(
+            send_bg_email,
+            emails, # type: ignore
+            subject,
+            html
+        )
     except Exception as e:
         print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    # await mail.send_message(message)
+    return {"message": "Email sent successfully!"}
 
 
 @auth_router.post('/signup', status_code=status.HTTP_201_CREATED)
@@ -47,8 +63,14 @@ async def create_user_account(user_data: UserCreateModel, bg_tasks: BackgroundTa
     <h1>Verify your Email</h1>
     <p>Please click this <a href="{link}">link</a> to verify your email</p>
     """
-    emails = [email]
-    send_email.delay(emails, "Verify your account", html_message) # type: ignore
+    bg_tasks.add_task(
+        send_bg_email,
+        recipients=[email],
+        subject="Verify your email",
+        body=html_message
+    )
+
+    # await mail.send_message(message)
 
     return {
         "message": "Account created successfully, check email to verify it!",
