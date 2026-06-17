@@ -19,28 +19,18 @@ auth_router = APIRouter()
 user_service = UserService()
 role_checker = RoleChecker(allowed_roles=["admin", "user"])
 
-async def send_bg_email(recipients: list[str], subject: str, body: str):
-    """Função auxiliar que cria e envia o e-mail de forma assíncrona"""
-    message = create_message(recipients=recipients, subject=subject, body=body)
-    await mail.send_message(message)
-
 @auth_router.post('/send_mail')
 async def send_mail(emails:EmailModel, bg_tasks: BackgroundTasks):
     html = "<h1>Welcome to the app!</h1>"
     subject = "Welcome to the app!"
     try: 
-        # message = create_message(
-        # emails, # type: ignore
-        # "Welcome",
-        # html
-        # )
-        # await mail.send_message(message)
-        bg_tasks.add_task(
-            send_bg_email,
-            emails, # type: ignore
-            subject,
-            html
+        message = create_message(
+        emails, # type: ignore
+        "Welcome",
+        html
         )
+        await mail.send_message(message)
+        bg_tasks.add_task(mail.send_message, message)
     except Exception as e:
         print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -63,12 +53,15 @@ async def create_user_account(user_data: UserCreateModel, bg_tasks: BackgroundTa
     <h1>Verify your Email</h1>
     <p>Please click this <a href="{link}">link</a> to verify your email</p>
     """
-    bg_tasks.add_task(
-        send_bg_email,
+    message = create_message(
         recipients=[email],
         subject="Verify your email",
         body=html_message
     )
+    
+    # 2. Use fastapi-mail's native background delivery system 
+    # Notice we pass the 'bg_tasks' instance straight into it!
+    bg_tasks.add_task(mail.send_message, message)
 
     # await mail.send_message(message)
 
