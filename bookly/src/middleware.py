@@ -28,10 +28,10 @@ def register_middleware(app:FastAPI):
         allow_headers=["*"],
         allow_credentials=True)
     
-    app.add_middleware(
-        TrustedHostMiddleware,
-        allowed_hosts=["localhost", "127.0.0.1", "fastapi-beyond-crud-crrs.onrender.com", "0.0.0.0", "testserver"],
-    )
+    # app.add_middleware(
+    #     TrustedHostMiddleware,
+    #     allowed_hosts=["localhost", "127.0.0.1", "fastapi-beyond-crud-crrs.onrender.com", "0.0.0.0", "testserver"],
+    # )
     
     # can be done with a header
 

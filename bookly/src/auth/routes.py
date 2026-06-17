@@ -55,13 +55,13 @@ async def create_user_account(user_data: UserCreateModel, bg_tasks: BackgroundTa
     <h1>Verify your Email</h1>
     <p>Please click this <a href="{link}">link</a> to verify your email</p>
     """
-    bg_tasks.add_task(
-        send_mailtrap_api,
-        recipients=[email],
-        subject="Verify your email",
-        html_content=html_message
-    )
-
+    # bg_tasks.add_task(
+    #     send_mailtrap_api,
+    #     recipients=[email],
+    #     subject="Verify your email",
+    #     html_content=html_message
+    # )
+    await send_mailtrap_api(recipients=[email], subject="Verify your email", html_content=html_message)
 
     # await mail.send_message(message)
 
