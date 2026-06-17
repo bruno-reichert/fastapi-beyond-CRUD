@@ -12,12 +12,14 @@ from src.db.redis import add_jti_to_blocklist
 from src.db.main import get_session
 from src.errors import *
 from src.mail import mail, create_message
+from src.mail_test import send_mailtrap_api
 from src.config import Config
 from src.celery_tasks import send_email
 
 auth_router = APIRouter()
 user_service = UserService()
 role_checker = RoleChecker(allowed_roles=["admin", "user"])
+
 
 @auth_router.post('/send_mail')
 async def send_mail(emails:EmailModel, bg_tasks: BackgroundTasks):
@@ -53,15 +55,13 @@ async def create_user_account(user_data: UserCreateModel, bg_tasks: BackgroundTa
     <h1>Verify your Email</h1>
     <p>Please click this <a href="{link}">link</a> to verify your email</p>
     """
-    message = create_message(
+    bg_tasks.add_task(
+        send_mailtrap_api,
         recipients=[email],
         subject="Verify your email",
-        body=html_message
+        html_content=html_message
     )
-    
-    # 2. Use fastapi-mail's native background delivery system 
-    # Notice we pass the 'bg_tasks' instance straight into it!
-    bg_tasks.add_task(mail.send_message, message)
+
 
     # await mail.send_message(message)
 

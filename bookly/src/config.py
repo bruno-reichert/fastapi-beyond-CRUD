@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = True
     DOMAIN: str
+    MAILTRAP_API_TOKEN: str
+    MAILTRAP_INBOX_ID: str
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 Config = Settings() # type: ignore
