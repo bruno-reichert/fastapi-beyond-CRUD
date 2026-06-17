@@ -2,7 +2,7 @@ import httpx
 from src.config import Config
 
 # Make sure MAILTRAP_INBOX_ID and MAILTRAP_API_TOKEN are defined in src/config.py
-URL = f"https://mailtrap.io{Config.MAILTRAP_INBOX_ID}"
+URL = f"https://sandbox.api.mailtrap.io/api/send/{Config.MAILTRAP_INBOX_ID}"
 
 async def send_mailtrap_api(recipients: list[str], subject: str, html_content: str):
     """Sends an email via Mailtrap Sandbox REST API to bypass Render port blocks"""
