@@ -14,7 +14,6 @@ from src.errors import *
 from src.mail import mail, create_message
 from src.mail_test import send_mailtrap_api
 from src.config import Config
-from src.celery_tasks import send_email
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -86,7 +85,7 @@ async def verify_user_account(token: str, session: AsyncSession = Depends(get_se
             )
         return JSONResponse(content={"message": "Error occured during verification"}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        return {'oops': 'wtfffff'}
+        return {"message": "Invalid or expired token"}
 
 @auth_router.post('/login')
 async def login_users(login_data: UserLoginModel, session: AsyncSession = Depends(get_session)):
@@ -185,4 +184,4 @@ async def reset_account_password(token: str, passwords: PasswordResetConfirmMode
             )
         return JSONResponse(content={"message": "Error occured during password_reset"}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        return {'oops': 'wtfffff'}
+        return {"message": "Invalid or expired token"}
